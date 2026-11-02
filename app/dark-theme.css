@@ -326,6 +326,12 @@
 :root[data-theme="dark"] .study-prep p{color:#9f89af}
 :root[data-theme="dark"] .study-issue{background:#332818;border:1px solid #69563c;color:#c4b08e}
 :root[data-theme="dark"] .study-practice-picker{background:#282828}
+:root[data-theme="dark"] .study-sequence{background:#282828}
+:root[data-theme="dark"] .study-sequence summary{color:#ac97bd}
+:root[data-theme="dark"] .study-sequence p{color:#a698b3}
+:root[data-theme="dark"] .study-stage{color:#ac97bd}
+:root[data-theme="dark"] .study-stage select{background:#282828;color:#b2a2bf}
+:root[data-theme="dark"] .study-current-file{color:#ac97bd}
 @media(max-width:800px){
 :root[data-theme="dark"] .sidebar-overlay{background:#36294740}
 }
