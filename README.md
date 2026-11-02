@@ -36,6 +36,16 @@ A chave OpenAI configurada anteriormente para o Sites não é transportada autom
 
 Este deploy inicia um banco próprio. Os materiais e as conversas da publicação anterior no Sites/Cloudflare não são copiados automaticamente. O histórico de migrações `drizzle/` é preservado apenas como referência da versão anterior; as migrações do servidor atual são executadas no início e controladas por `PRAGMA user_version` em `lib/persistence.mjs`.
 
+## Conquistas e recompensas
+
+A página **Conquistas** reúne nível, meta semanal, objetivos pessoais e medalhas. As regras ficam em `lib/rewards.ts`, compartilhadas pelo servidor e pela interface.
+
+- **Bônus de XP** (calculados no servidor ao salvar a sessão; valores enviados pelo navegador são ignorados): gabarito perfeito com 3+ perguntas (+25), primeira sessão do dia (+10), sequência de dias (+5 por dia, até +35), meta semanal batida (+50) e objetivo concluído (+100).
+- **Meta semanal**: de 1 a 21 sessões por semana (segunda a domingo, fuso de São Paulo); padrão 5.
+- **Objetivos**: concluir sessões, acertar questões, ganhar XP ou gabaritar sessões, com prazo opcional. Contam somente as sessões feitas depois da criação do objetivo.
+- **Níveis**: a cada 150 XP, com títulos de Explorador a Galáxia.
+- **Medalhas**: 16 medalhas (bronze, prata e ouro), calculadas a partir do histórico, com a data de desbloqueio.
+
 ## Desenvolvimento local
 
 Requer Node.js 24 e npm.
