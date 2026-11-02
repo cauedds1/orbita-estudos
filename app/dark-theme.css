@@ -338,6 +338,13 @@
 :root[data-theme="dark"] .exam-navigation button.answered{background:#213026;color:#b3ccbc}
 :root[data-theme="dark"] .exam-navigation button.current{outline:2px solid #b29adb}
 :root[data-theme="dark"] .exam-count{color:#ac97bd}
+:root[data-theme="dark"] .mission-progress{border:1px solid #524464;background:#23192c}
+:root[data-theme="dark"] .mission-progress strong{color:#b2a2bf}
+:root[data-theme="dark"] .mission-progress p{color:#a698b3}
+:root[data-theme="dark"] .mission-progress small{color:#ac97bd}
+:root[data-theme="dark"] .mission-dots{color:#8e77a9}
+:root[data-theme="dark"] .mission-dots .lit{color:#dab677}
+:root[data-theme="dark"] .mission-progress.achieved{border-color:#cdb78d;background:#332818}
 @media(max-width:800px){
 :root[data-theme="dark"] .sidebar-overlay{background:#36294740}
 }
