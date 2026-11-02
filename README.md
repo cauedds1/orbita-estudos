@@ -5,23 +5,22 @@ Plataforma de estudos com materiais PDF/texto, modo Fast, flashcards, quizzes, s
 ## Deploy no Railway
 
 1. Crie um serviço a partir de `cauedds1/orbita-estudos`, branch `main`. O Railway usa o `Dockerfile` e o `railway.json` deste repositório.
-2. **Anexe um volume persistente ao serviço, montado em `/data`, antes de iniciar.** Banco SQLite, contas, sessões, conversas e arquivos ficam juntos nesse volume. Sem volume a aplicação recusa iniciar no Railway, para evitar perda silenciosa dos dados.
+2. **Anexe um volume persistente ao serviço (sugestão: montado em `/data`) antes de iniciar.** Banco SQLite, contas, sessões, conversas e arquivos ficam juntos nesse volume. Sem volume a aplicação recusa iniciar no Railway, para evitar perda silenciosa dos dados.
 3. Nas variáveis do serviço, configure:
 
 | Variável | Valor |
 | --- | --- |
-| `DATA_DIR` | `/data` |
 | `ADMIN_EMAIL` | Seu e-mail para a primeira conta |
 | `ADMIN_PASSWORD` | Uma senha própria com 12 a 128 caracteres |
 | `OPENAI_API_KEY` | Sua chave OpenAI, marcada como segredo |
 | `OPENAI_MODEL` | `gpt-4.1-mini`, ou outro modelo compatível com Responses, PDFs e saída estruturada |
 | `ALLOW_SIGNUP` | `false` para acesso privado; `true` somente se quiser permitir novos cadastros |
-| `APP_URL` | URL pública completa do serviço, quando estiver disponível, por exemplo `https://seu-servico.up.railway.app` |
+| `APP_URL` | Opcional. URL pública completa, por exemplo `https://seu-servico.up.railway.app`. Se usar domínio próprio, coloque aqui o domínio pelo qual os usuários acessam |
 
-4. Faça o deploy e gere um domínio público na configuração de rede do Railway. Depois de definir `APP_URL`, reaplique as variáveis com um redeploy.
+4. Faça o deploy e gere um domínio público em *Settings → Networking* do serviço. Não é preciso definir `APP_URL`: a origem é conferida pelos cabeçalhos `Host`/`X-Forwarded-Proto` enviados pelo proxy do Railway.
 5. Acesse o domínio e entre com `ADMIN_EMAIL` e `ADMIN_PASSWORD`.
 
-Não sobrescreva o comando de inicialização do Docker: ele inicializa o banco e a conta antes do servidor. `PORT` é fornecida pelo Railway; o servidor escuta em `0.0.0.0`. A checagem de saúde é `GET /api/health`.
+O banco fica no caminho do volume (`RAILWAY_VOLUME_MOUNT_PATH`, injetado pelo Railway); `DATA_DIR` só é necessário para usar uma subpasta dentro do volume. Não sobrescreva o comando de inicialização do Docker: ele inicializa o banco e a conta antes do servidor. `PORT` é fornecida pelo Railway; o servidor escuta em `0.0.0.0`. A checagem de saúde é `GET /api/health`.
 
 Use **uma réplica e um único serviço** com este volume SQLite. Para escalar em múltiplas réplicas, adapte a persistência para PostgreSQL e armazenamento de objetos. Configure os backups do volume no Railway: o volume mantém os dados entre deploys, mas não substitui backup.
 
