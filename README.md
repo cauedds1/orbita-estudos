@@ -46,6 +46,12 @@ A aba **Conquistas**, dentro de **Meu progresso**, reúne nível, meta semanal, 
 - **Níveis**: a cada 150 XP, com títulos de Explorador a Galáxia.
 - **Medalhas**: 16 medalhas (bronze, prata e ouro), calculadas a partir do histórico, com a data de desbloqueio.
 
+## Modo escuro
+
+O botão de sol/lua no topo alterna entre claro e escuro; a escolha fica salva no navegador. Sem escolha salva, o app segue o tema do sistema. O tema é aplicado antes da primeira pintura, sem piscar.
+
+`app/dark-theme.css` é gerado por `scripts/generate-dark-theme.mjs` a partir de `app/globals.css` (fundos claros escurecem, textos escuros clareiam, cores de destaque e superfícies escuras são mantidas). Ele é regenerado automaticamente em `npm run dev` e `npm run build`; não edite o arquivo gerado. Um teste falha se ele estiver desatualizado.
+
 ## Desenvolvimento local
 
 Requer Node.js 24 e npm.

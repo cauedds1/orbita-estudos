@@ -6,12 +6,13 @@
     "node": ">=24 <25"
   },
   "scripts": {
-    "dev": "node --env-file-if-exists=.env.local scripts/dev.mjs",
+    "dev": "node scripts/generate-dark-theme.mjs && node --env-file-if-exists=.env.local scripts/dev.mjs",
     "build": "next build --webpack",
     "postbuild": "node scripts/prepare-standalone.mjs",
     "start": "node --env-file-if-exists=.env.local scripts/start.mjs",
     "test": "node --test tests/*.test.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prebuild": "node scripts/generate-dark-theme.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.31.0",
