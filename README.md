@@ -46,6 +46,19 @@ A aba **Conquistas**, dentro de **Meu progresso**, reúne nível, meta semanal, 
 - **Níveis**: a cada 150 XP, com títulos de Explorador a Galáxia.
 - **Medalhas**: 16 medalhas (bronze, prata e ouro), calculadas a partir do histórico, com a data de desbloqueio.
 
+## Matéria em foco
+
+No Início, o aluno escolhe **o que vai estudar agora**. Com uma matéria em foco (salva na conta), o app passa a girar em torno dela:
+
+- **Próximo passo**: recomendação do que fazer agora, em ordem de prioridade: prova em até 7 dias (missão Fast), perguntas erradas ainda não corrigidas, materiais com menos de 70% de acertos, próximo material não iniciado (ou preparar desafios, se ainda não tiver), materiais dominados há mais de 7 dias (revisão espaçada) e prova em até 14 dias.
+- **Números da matéria**: acertos, materiais praticados e dominados (80%+ no último resultado), sessões e ritmo até a prova (materiais por dia para cobrir o que falta).
+- **Roteiro**: cada material com sua situação (não iniciado, precisa de prática, hora de revisar, dominado).
+- **Tutor da matéria**: chat que responde com base nos materiais da matéria e cita as fontes. A cada pergunta, os trechos mais relevantes são selecionados (busca por termos), em vez de enviar todos os arquivos à IA. O texto de PDFs é extraído uma vez e guardado.
+- **Praticar, Modo Fast e Biblioteca** mostram os materiais da matéria em foco; **Revisar erros** refaz os erros pendentes dela.
+- **Meu progresso** mostra o desempenho por matéria e aponta a que mais precisa de atenção.
+
+As regras ficam em `lib/study-guide.ts`; o tutor, em `app/api/subject-service.ts`.
+
 ## Importar pastas
 
 Em **Adicionar material → Pasta**, escolha (ou arraste) a pasta principal. Cada subpasta vira uma matéria e cada arquivo PDF, TXT ou MD vira um material; numeração e sufixos como “- conteudo completo” são removidos dos nomes (`03 - Banco de Dados/Tema 2 - conteudo completo.txt` → “Tema 2” em “Banco de Dados”). Antes de importar aparece uma prévia por matéria. Arquivos LEIA-ME/README, de outros formatos, vazios ou com mais de 15 MB são ignorados, e os que já estão na biblioteca são pulados, então reimportar a mesma pasta não duplica nada. A regra fica em `app/folder-import.ts`.

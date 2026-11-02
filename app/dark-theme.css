@@ -315,6 +315,45 @@
 :root[data-theme="dark"] .import-skipped b{color:#a9a2b3}
 :root[data-theme="dark"] .import-error{color:#cf8682}
 :root[data-theme="dark"] .subject-section .section-heading h2 svg{color:#bdacd4}
+:root[data-theme="dark"] .workspace.focused{background:#1f192c;border-color:#45365c}
+:root[data-theme="dark"] .workspace.focused small{color:#a193bd}
+:root[data-theme="dark"] .subject-card{background:#282828}
+:root[data-theme="dark"] .subject-card:hover{border-color:#574771;box-shadow:0 8px 18px #0000001d}
+:root[data-theme="dark"] .subject-card.current{border-color:#c3b2d7;background:#181029}
+:root[data-theme="dark"] .subject-card p{color:#a197ab}
+:root[data-theme="dark"] .subject-card small{color:#978ba7}
+:root[data-theme="dark"] .subject-card-cta{color:#a193bd}
+:root[data-theme="dark"] .pill.urgent{background:#35201a;color:#ce9183}
+:root[data-theme="dark"] .next-step{background:linear-gradient(135deg,#1f1b2f,#22192a);border:1px solid #493c5b}
+:root[data-theme="dark"] .next-step-icon{background:#282828;color:#9887d9;box-shadow:0 4px 12px #00000024}
+:root[data-theme="dark"] .next-step p{color:#aba3b6}
+:root[data-theme="dark"] .focus-stat-grid b{color:#a89ec4}
+:root[data-theme="dark"] .focus-stat-grid small{color:#9385ac}
+:root[data-theme="dark"] .focus-stat-grid span{color:#a197ab}
+:root[data-theme="dark"] .exam-pace{background:#1e1a26;color:#aea4bb}
+:root[data-theme="dark"] .exam-pace.urgent{background:#301c16;color:#d09281}
+:root[data-theme="dark"] .exam-pace.muted{color:#a197ab}
+:root[data-theme="dark"] .rec-item{background:#282828;color:#bdacd4}
+:root[data-theme="dark"] .rec-item:hover{border-color:#574771}
+:root[data-theme="dark"] .rec-item b{color:#c4becd}
+:root[data-theme="dark"] .rec-item small{color:#a197ab}
+:root[data-theme="dark"] .roadmap-item{border-bottom:1px solid #3d3349}
+:root[data-theme="dark"] .roadmap-dot{color:#8b7ba2}
+:root[data-theme="dark"] .roadmap-item.dominado .roadmap-dot{color:#9dbcab}
+:root[data-theme="dark"] .roadmap-item.praticar .roadmap-dot{color:#deb384}
+:root[data-theme="dark"] .roadmap-item.revisar .roadmap-dot{color:#a193bd}
+:root[data-theme="dark"] .roadmap-title b{color:#c4becd}
+:root[data-theme="dark"] .roadmap-title small{color:#a197ab}
+:root[data-theme="dark"] .tutor-sources{color:#a197ab}
+:root[data-theme="dark"] .tutor-form textarea{border:1px solid #493f55;background:#211521;color:#c1b8c6}
+:root[data-theme="dark"] .tutor-form textarea:focus{border-color:#c3b2d7;box-shadow:0 0 0 3px #0000002b}
+:root[data-theme="dark"] .picker-note{color:#d09281;background:#301c16}
+:root[data-theme="dark"] .performance-list{background:#282828}
+:root[data-theme="dark"] .performance-row{border-bottom:1px solid #3d3349}
+:root[data-theme="dark"] .performance-name b{color:#c4becd}
+:root[data-theme="dark"] .performance-name small,:root[data-theme="dark"] .performance-bar small,:root[data-theme="dark"] .performance-count small{color:#a197ab}
+:root[data-theme="dark"] .performance-bar .progress-track>span.weak{background:#d9906a}
+:root[data-theme="dark"] .performance-count b{color:#a89ec4}
 @media(max-width:800px){
 :root[data-theme="dark"] .sidebar-overlay{background:#36294740}
 }
