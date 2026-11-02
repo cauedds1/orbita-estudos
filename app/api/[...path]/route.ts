@@ -1,6 +1,7 @@
 import {env} from 'cloudflare:workers';
 import {extractText,getDocumentProxy} from 'unpdf';
 import {getChatGPTUser} from '../../chatgpt-auth';
+import {handleTopics} from '../topic-service';
 const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 const qSchema={type:'object',additionalProperties:false,properties:{summary:{type:'string'},questions:{type:'array',items:{type:'object',additionalProperties:false,properties:{prompt:{type:'string'},answer:{type:'string'},options:{type:'array',items:{type:'string'}},explanation:{type:'string'},source:{type:'string'}},required:['prompt','answer','options','explanation','source']}}},required:['summary','questions']};
 const fastSchema={...qSchema,properties:{...qSchema.properties,questions:{...qSchema.properties.questions,items:{...qSchema.properties.questions.items,properties:{...qSchema.properties.questions.items.properties,topicTitle:{type:'string'}},required:[...qSchema.properties.questions.items.required,'topicTitle']}},topics:{type:'array',items:{type:'object',additionalProperties:false,properties:{title:{type:'string'},reason:{type:'string'},source:{type:'string'},evidence:{type:'string',enum:['Escopo informado','Dica informada','Questão anterior informada','Conceito central']}},required:['title','reason','source','evidence']}},coverageNote:{type:'string'},scopeMatch:{type:'string',enum:['sem_escopo','presente','parcial','ausente']}},required:['summary','questions','topics','coverageNote','scopeMatch']};
@@ -11,6 +12,7 @@ async function handle(req:Request){try{
  const get=async(id:string,kind:string)=>{const r=await db.prepare('SELECT data FROM records WHERE id=? AND user_id=? AND kind=?').bind(id,user.userId,kind).first<any>();return r?{id,...JSON.parse(r.data)}:null};
  const save=async(id:string,kind:string,data:any)=>db.prepare('INSERT INTO records(id,user_id,kind,data) VALUES(?,?,?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data WHERE records.user_id=excluded.user_id AND records.kind=excluded.kind').bind(id,user.userId,kind,JSON.stringify(data)).run();
  if(path==='state'&&req.method==='GET')return json({materials:await list('material'),exams:await list('exam'),sessions:await list('session'),ai:!!env.OPENAI_API_KEY});
+ if(path==='topics'||path.startsWith('topics/'))return handleTopics(req,{path,userId:user.userId,list,get,save});
  if(path==='materials'&&req.method==='POST'){
  const f=await req.formData(),title=String(f.get('title')||'').trim().slice(0,150),subject=String(f.get('subject')||'Geral').trim().slice(0,100),file=f.get('file');let text=String(f.get('text')||'').trim();if(!title)return json({error:'Dê um título ao material.'},400);
  const id=crypto.randomUUID();let key=null,type='Texto',size=0,filename=null;
