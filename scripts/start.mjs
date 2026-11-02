@@ -1,0 +1,12 @@
+import {existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {bootstrapOwner,dataDirectory,assertPersistentVolume} from '../lib/persistence.mjs';
+process.env.NODE_ENV='production';
+process.env.DATA_DIR=dataDirectory();
+process.env.HOSTNAME='0.0.0.0';
+assertPersistentVolume();
+bootstrapOwner();
+const server=process.env.ORBITA_SERVER_PATH?resolve(process.env.ORBITA_SERVER_PATH):existsSync(resolve('server.js'))?resolve('server.js'):resolve('.next/standalone/server.js');
+if(!existsSync(server))throw new Error('Execute npm run build antes de npm start.');
+await import(pathToFileURL(server).href);

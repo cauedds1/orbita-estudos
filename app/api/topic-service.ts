@@ -1,4 +1,4 @@
-import {env} from 'cloudflare:workers';
+import {env} from '../../lib/runtime';
 
 type Context={path:string,userId:string,list:(kind:string)=>Promise<any[]>,get:(id:string,kind:string)=>Promise<any>,save:(id:string,kind:string,data:any)=>Promise<unknown>};
 const json=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
