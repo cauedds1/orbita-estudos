@@ -38,7 +38,7 @@ Este deploy inicia um banco próprio. Os materiais e as conversas da publicaçã
 
 ## Conquistas e recompensas
 
-A página **Conquistas** reúne nível, meta semanal, objetivos pessoais e medalhas. As regras ficam em `lib/rewards.ts`, compartilhadas pelo servidor e pela interface.
+A aba **Conquistas**, dentro de **Meu progresso**, reúne nível, meta semanal, objetivos pessoais e medalhas. As regras ficam em `lib/rewards.ts`, compartilhadas pelo servidor e pela interface.
 
 - **Bônus de XP** (calculados no servidor ao salvar a sessão; valores enviados pelo navegador são ignorados): gabarito perfeito com 3+ perguntas (+25), primeira sessão do dia (+10), sequência de dias (+5 por dia, até +35), meta semanal batida (+50) e objetivo concluído (+100).
 - **Meta semanal**: de 1 a 21 sessões por semana (segunda a domingo, fuso de São Paulo); padrão 5.
