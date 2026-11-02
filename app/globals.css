@@ -68,3 +68,19 @@ form label select{display:block;width:100%;margin-top:8px}
 @media(max-width:550px){.progress-tabs{display:flex}.progress-tabs button{flex:1;justify-content:center;padding:9px 10px}}
 .progress-tabs+.level-panel,.progress-tabs+.stats-grid{margin-top:0}
 .theme-toggle{margin-left:10px;color:#8a74b4}
+/* Importação de pasta */
+.import-box{display:flex;flex-direction:column;gap:12px;padding:20px;border:1px solid #ece6f3;border-radius:12px;background:#fdfbff}
+.import-box h3{margin:0;font-size:16px}.import-box .progress-track{margin-top:0}.import-box .muted{font-size:11px;margin:0}
+.import-groups{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow:auto}
+.import-groups details{border:1px solid #eee8f5;border-radius:9px;background:#fff}
+.import-groups summary{display:flex;align-items:center;gap:8px;padding:10px 12px;cursor:pointer;font-size:12px;color:#7f6c99}
+.import-groups summary b{flex:1;color:#4f4560;font-weight:600}
+.import-groups summary span{font-size:10px;padding:2px 8px;border-radius:10px;background:var(--lilac);color:#7560ad}
+.import-groups ul,.import-skipped ul{margin:0;padding:0 14px 10px 36px;font-size:11px;color:#8f879b;line-height:1.8}
+.import-skipped{font-size:11px;color:#a397af}.import-skipped summary{cursor:pointer;padding:4px 0}.import-skipped ul{padding-left:18px}.import-skipped b{font-weight:550;color:#8d819d;overflow-wrap:anywhere}
+.import-actions{display:flex;gap:10px;flex-wrap:wrap}.import-actions .button{flex:1;justify-content:center}
+.import-error{font-size:11px;color:#c0605a;margin:10px 0 0}
+.subject-section+.subject-section{margin-top:8px}
+.subject-section .section-heading h2{display:flex;align-items:center;gap:9px}
+.subject-section .section-heading h2 svg{color:#a28ac3;flex-shrink:0}
+.subject-section .text-link{width:auto;border-top:0;padding-top:0;margin:0}

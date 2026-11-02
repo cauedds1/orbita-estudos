@@ -305,6 +305,16 @@
 :root[data-theme="dark"] .reward-box{background:#282828;border:1px solid #4c3d55}
 :root[data-theme="dark"] .tab-count{background:#251e30;color:#a193bd}
 :root[data-theme="dark"] .theme-toggle{color:#a193bd}
+:root[data-theme="dark"] .import-box{border:1px solid #433850;background:#1b0f28}
+:root[data-theme="dark"] .import-groups details{border:1px solid #41354f;background:#282828}
+:root[data-theme="dark"] .import-groups summary{color:#aea4bb}
+:root[data-theme="dark"] .import-groups summary b{color:#c4becd}
+:root[data-theme="dark"] .import-groups summary span{color:#9c8dc4}
+:root[data-theme="dark"] .import-groups ul,:root[data-theme="dark"] .import-skipped ul{color:#a8a3b0}
+:root[data-theme="dark"] .import-skipped{color:#a197ab}
+:root[data-theme="dark"] .import-skipped b{color:#a9a2b3}
+:root[data-theme="dark"] .import-error{color:#cf8682}
+:root[data-theme="dark"] .subject-section .section-heading h2 svg{color:#bdacd4}
 @media(max-width:800px){
 :root[data-theme="dark"] .sidebar-overlay{background:#36294740}
 }

@@ -46,6 +46,12 @@ A aba **Conquistas**, dentro de **Meu progresso**, reúne nível, meta semanal, 
 - **Níveis**: a cada 150 XP, com títulos de Explorador a Galáxia.
 - **Medalhas**: 16 medalhas (bronze, prata e ouro), calculadas a partir do histórico, com a data de desbloqueio.
 
+## Importar pastas
+
+Em **Adicionar material → Pasta**, escolha (ou arraste) a pasta principal. Cada subpasta vira uma matéria e cada arquivo PDF, TXT ou MD vira um material; numeração e sufixos como “- conteudo completo” são removidos dos nomes (`03 - Banco de Dados/Tema 2 - conteudo completo.txt` → “Tema 2” em “Banco de Dados”). Antes de importar aparece uma prévia por matéria. Arquivos LEIA-ME/README, de outros formatos, vazios ou com mais de 15 MB são ignorados, e os que já estão na biblioteca são pulados, então reimportar a mesma pasta não duplica nada. A regra fica em `app/folder-import.ts`.
+
+Na biblioteca, “Todas as matérias” mostra uma seção por matéria, com os materiais em ordem natural (Tema 2, Tema 3, Tema 10).
+
 ## Modo escuro
 
 O botão de sol/lua no topo alterna entre claro e escuro; a escolha fica salva no navegador. Sem escolha salva, o app segue o tema do sistema. O tema é aplicado antes da primeira pintura, sem piscar.
