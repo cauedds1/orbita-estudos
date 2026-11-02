@@ -54,7 +54,10 @@ No Início, o aluno escolhe **o que vai estudar agora**. Com uma matéria em foc
 - **Números da matéria**: acertos, materiais praticados e dominados (80%+ no último resultado), sessões e ritmo até a prova (materiais por dia para cobrir o que falta).
 - **Roteiro**: cada material com sua situação (não iniciado, precisa de prática, hora de revisar, dominado).
 - **Tutor da matéria**: chat que responde com base nos materiais da matéria e cita as fontes. A cada pergunta, os trechos mais relevantes são selecionados (busca por termos), em vez de enviar todos os arquivos à IA. O texto de PDFs é extraído uma vez e guardado.
-- **Praticar, Modo Fast e Biblioteca** mostram os materiais da matéria em foco; **Revisar erros** refaz os erros pendentes dela.
+- **Matéria inteira**: Flashcards, Quiz e Simulado misturam perguntas de todos os arquivos da matéria (`app/study-plan.ts`). Essas sessões contam no roteiro: cada material recebe crédito pelas perguntas dele que caíram (com pelo menos 3, ou todas se tiver menos), e os erros entram na revisão.
+- **Preparar todos**: com 2 ou mais arquivos sem desafios, o próximo passo é preparar a matéria inteira; a IA processa um arquivo por vez, com progresso e opção de parar após o arquivo atual.
+- **Praticar, Modo Fast e Biblioteca** seguem a matéria em foco (o seletor de Praticar troca o foco); **Revisar erros** refaz os erros pendentes dela. Um erro sai da lista quando a pergunta é respondida certo em qualquer sessão posterior.
+- Sem matéria em foco, o Início sugere continuar na última matéria estudada.
 - **Meu progresso** mostra o desempenho por matéria e aponta a que mais precisa de atenção.
 
 As regras ficam em `lib/study-guide.ts`; o tutor, em `app/api/subject-service.ts`.

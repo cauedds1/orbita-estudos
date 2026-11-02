@@ -26,8 +26,28 @@ export function sessionsOf(subject:string,materials:GuideMaterial[],sessions:Gui
  return sessions.filter(s=>s.subject?sameSubject(s.subject,subject):ids.has(s.materialId)).sort(byDate);
 }
 
+/**
+ * Resultados que contam para um material: as sessões dele e, nas sessões da matéria inteira
+ * (perguntas misturadas de vários arquivos), a parte das perguntas que veio deste material,
+ * quando caíram pelo menos 3 delas (ou todas, se ele tiver menos).
+ */
+function resultsFor(material:GuideMaterial,sessions:GuideSession[]){
+ const prompts=new Set(material.questions.map(q=>q.prompt)),min=Math.min(3,prompts.size);
+ const results:{correct:number,total:number,createdAt:string}[]=[];
+ for(const s of sessions){
+ if(s.materialId===material.id){if(s.total>0)results.push(s);continue}
+ if(!min||!s.asked?.length||!isMixed(s))continue;
+ const asked=s.asked.filter(p=>prompts.has(p));if(asked.length<min)continue;
+ const wrong=new Set((s.mistakes||[]).map(q=>q.prompt).filter(p=>prompts.has(p)));
+ results.push({correct:asked.length-wrong.size,total:asked.length,createdAt:s.createdAt});
+ }
+ return results.sort((a,b)=>a.createdAt.localeCompare(b.createdAt));
+}
+// Sessões de matéria inteira ou de revisão misturam perguntas de vários materiais.
+const isMixed=(s:GuideSession)=>/^(subject|review):/.test(s.materialId)||s.materialId==='review';
+
 export function materialProgress(material:GuideMaterial,sessions:GuideSession[],now=new Date()):MaterialProgress{
- const own=sessions.filter(s=>s.materialId===material.id&&s.total>0).sort(byDate);
+ const own=resultsFor(material,sessions);
  if(!own.length)return {state:'novo',sessions:0,lastAccuracy:null,bestAccuracy:null,lastStudied:null,daysSince:null};
  const last=own.at(-1)!,lastAccuracy=last.correct/last.total,bestAccuracy=Math.max(...own.map(s=>s.correct/s.total));
  const daysSince=daysBetween(dayKey(last.createdAt),dayKey(now));
@@ -35,16 +55,24 @@ export function materialProgress(material:GuideMaterial,sessions:GuideSession[],
  return {state,sessions:own.length,lastAccuracy,bestAccuracy,lastStudied:last.createdAt,daysSince};
 }
 
-/** Erros ainda não corrigidos: os da sessão mais recente de cada material, sem repetir a mesma pergunta. */
+/**
+ * Erros ainda não corrigidos na matéria. Cada pergunta é acompanhada em ordem cronológica:
+ * errar marca como pendente; ser feita de novo sem erro (em qualquer sessão: do material,
+ * da matéria inteira ou da revisão) resolve. Sessões antigas, sem a lista de perguntas feitas,
+ * contam como tendo refeito todas as perguntas do material.
+ */
 export function pendingMistakes(subject:string,materials:GuideMaterial[],sessions:GuideSession[]){
- const out:(GuideQuestion&{materialId:string})[]=[],seen=new Set<string>(),later=sessionsOf(subject,materials,sessions);
- // Um erro é resolvido quando uma sessão posterior (ex.: a revisão de erros) fez a pergunta e ela não voltou a ser errada.
- const fixedAfter=(prompt:string,since:string)=>later.some(s=>s.createdAt>since&&s.asked?.includes(prompt)&&!s.mistakes?.some(q=>q.prompt===prompt));
- for(const m of materialsOf(subject,materials)){
- const last=sessions.filter(s=>s.materialId===m.id).sort(byDate).at(-1);
- for(const q of last?.mistakes||[])if(q?.prompt&&!seen.has(q.prompt)&&!fixedAfter(q.prompt,last!.createdAt)){seen.add(q.prompt);out.push({...q,materialId:m.id})}
+ const list=materialsOf(subject,materials),byId=new Map(list.map(m=>[m.id,m])),owner=new Map<string,string>();
+ for(const m of list)for(const q of m.questions)if(!owner.has(q.prompt))owner.set(q.prompt,m.id);
+ const state=new Map<string,{wrong:boolean,q?:GuideQuestion,materialId:string}>();
+ for(const s of sessionsOf(subject,materials,sessions)){
+ const material=byId.get(s.materialId);
+ if(!s.asked&&material){for(const [p,v] of state)if(v.materialId===material.id)state.delete(p);for(const q of material.questions)state.set(q.prompt,{wrong:false,materialId:material.id})}
+ for(const p of s.asked||[])state.set(p,{wrong:false,materialId:material?.id||owner.get(p)||''});
+ for(const q of s.mistakes||[])if(q?.prompt)state.set(q.prompt,{wrong:true,q,materialId:material?.id||owner.get(q.prompt)||''});
  }
- return out;
+ const order=new Map(list.map((m,i)=>[m.id,i]));
+ return [...state.values()].filter(v=>v.wrong&&v.q).map((v,i)=>({...v.q!,materialId:v.materialId,i})).sort((a,b)=>(order.get(a.materialId)??1e9)-(order.get(b.materialId)??1e9)||a.i-b.i).map(({i,...q})=>q);
 }
 
 export function nextExam(subject:string,exams:GuideExam[],now=new Date()){
@@ -79,8 +107,11 @@ export function recommendations(subject:string,materials:GuideMaterial[],session
  const urgent=exam&&exam.daysLeft<=7?examRec():null;if(urgent)recs.push(urgent);
  if(mistakes.length)recs.push({id:'mistakes',kind:'mistakes',title:`Refazer ${mistakes.length} ${mistakes.length===1?'pergunta errada':'perguntas erradas'}`,reason:'Voltar ao que você errou fixa mais do que reler o conteúdo.'});
  for(const r of weak.slice(0,2))recs.push({id:'practice:'+r.m.id,kind:'practice',materialId:r.m.id,title:`Praticar de novo: ${r.m.title}`,reason:`Último resultado: ${pct(r.p.lastAccuracy!)} de acertos. A meta é ${pct(MASTERY)}.`});
- const next=fresh[0];
- if(next)recs.push(next.m.questions.length?{id:'new:'+next.m.id,kind:'new',materialId:next.m.id,title:`Começar: ${next.m.title}`,reason:`${fresh.length===1?'É o único material':`É o próximo dos ${fresh.length} materiais`} ainda não praticados.`}:{id:'generate:'+next.m.id,kind:'generate',materialId:next.m.id,title:`Preparar: ${next.m.title}`,reason:'A IA cria perguntas a partir deste material para você praticar.'});
+ const ready=fresh.find(r=>r.m.questions.length),unprepared=rows.filter(r=>!r.m.questions.length);
+ if(ready)recs.push({id:'new:'+ready.m.id,kind:'new',materialId:ready.m.id,title:`Começar: ${ready.m.title}`,reason:`${fresh.length===1?'É o único material':`É o próximo dos ${fresh.length} materiais`} ainda não praticados.`});
+ // Vários arquivos sem desafios: preparar todos de uma vez, depois praticar a matéria inteira.
+ if(unprepared.length>=2)recs.push({id:'generate-all',kind:'generate',title:`Preparar os ${unprepared.length} materiais da matéria`,reason:'A IA cria as perguntas de todos os arquivos que faltam, um por vez. Depois você pratica a matéria inteira, misturando os temas.'});
+ else if(unprepared.length===1&&!ready)recs.push({id:'generate:'+unprepared[0].m.id,kind:'generate',materialId:unprepared[0].m.id,title:`Preparar: ${unprepared[0].m.title}`,reason:'A IA cria perguntas a partir deste material para você praticar.'});
  if(stale[0])recs.push({id:'review:'+stale[0].m.id,kind:'review',materialId:stale[0].m.id,title:`Revisar: ${stale[0].m.title}`,reason:`Estudado há ${stale[0].p.daysSince} dias. Revisar agora ajuda a não esquecer.`});
  if(!urgent){const later=examRec();if(later)recs.push(later)}
  const unique=recs.filter((r,i)=>!r.materialId||r.kind==='exam'||recs.findIndex(x=>x.materialId===r.materialId&&x.kind!=='exam')===i);

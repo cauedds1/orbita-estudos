@@ -51,3 +51,22 @@ test('números da matéria, prova e ritmo',()=>{
  assert.deepEqual((({remaining,perDay})=>({remaining,perDay}))(examPace('Banco de Dados',mats,sessions,exams,now)),{remaining:2,perDay:2});
  assert.deepEqual(subjectsOverview(mats,sessions,exams,now).map(o=>[o.subject,o.materials,!!o.nextExam]),[['Banco de Dados',3,true],['Redes',1,false]]);
 });
+
+test('sessões da matéria inteira contam por material e seus erros entram na revisão',()=>{
+ const a=M('a','Tema 2',undefined,[q('a1'),q('a2'),q('a3')]),b=M('b','Tema 3',undefined,[q('b1'),q('b2')]),c=M('c','Tema 4',undefined,[q('c1'),q('c2'),q('c3'),q('c4')]);
+ const mixed={materialId:'subject:Banco de Dados',subject:'Banco de Dados',mode:'Quiz',total:6,correct:4,createdAt:at('2026-11-19').toISOString(),asked:['a1','a2','a3','b1','b2','c1'],mistakes:[q('a2'),q('b1')]};
+ const pa=materialProgress(a,[mixed],now),pb=materialProgress(b,[mixed],now),pc=materialProgress(c,[mixed],now);
+ assert.deepEqual([pa.state,pa.lastAccuracy],['praticar',2/3]);
+ assert.deepEqual([pb.state,pb.lastAccuracy],['praticar',.5],'material com 2 perguntas conta com as 2');
+ assert.equal(pc.state,'novo','só 1 de 4 perguntas caiu: não conta');
+ assert.deepEqual(pendingMistakes('Banco de Dados',[a,b,c],[mixed]).map(x=>[x.prompt,x.materialId]),[['a2','a'],['b1','b']]);
+ const later=S('a','2026-11-20',3,3);later.asked=['a1','a2','a3'];
+ assert.deepEqual(pendingMistakes('Banco de Dados',[a,b,c],[mixed,later]).map(x=>x.prompt),['b1'],'refazer o Tema 2 resolve a2');
+});
+
+test('vários materiais sem desafios viram uma recomendação de preparar todos',()=>{
+ const recs=recommendations('Banco de Dados',[M('a','Tema 2',undefined,[]),M('b','Tema 3',undefined,[]),M('c','Tema 4',undefined,[])],[],[],now);
+ assert.deepEqual(recs.map(r=>[r.id,r.materialId]),[['generate-all',undefined]]);assert.match(recs[0].title,/3 materiais/);
+ const mixed=recommendations('Banco de Dados',[M('a','Tema 2'),M('b','Tema 3',undefined,[]),M('c','Tema 4',undefined,[])],[],[],now);
+ assert.deepEqual(mixed.map(r=>r.id),['new:a','generate-all']);
+});
