@@ -3,6 +3,7 @@ const originalFetch=globalThis.fetch;
 globalThis.fetch=async function(input,options){
  const url=typeof input==='string'?input:input instanceof URL?input.href:input.url;
  if(url!=='https://api.openai.com/v1/responses')return originalFetch(input,options);
+ if(options.body.includes('TEST_GENERATION_TIMEOUT'))throw new DOMException('Timed out','TimeoutError');if(options.body.includes('TEST_GENERATION_QUOTA'))return Response.json({error:{code:'insufficient_quota'}},{status:429});
  const request=JSON.parse(options.body);const format=request.text?.format;
  const body=JSON.stringify(request.input);const english=body.includes('Equivalent fractions represent the same amount.');const source=english?'Equivalent fractions represent the same amount.':'Frações equivalentes representam a mesma quantidade.';
  const q=(prompt='O que representam frações equivalentes?')=>({prompt,options:['A mesma quantidade','Quantidades sempre distintas','Números sem relação','Apenas números inteiros'],answer:'A mesma quantidade',explanation:'A divisão pode mudar sem mudar a quantidade representada.'});

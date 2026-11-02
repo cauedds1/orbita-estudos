@@ -37,6 +37,8 @@ test('production server: auth, isolation, study flows and persistence after rest
  await start();let r=await fetch(base+'/',{redirect:'manual'});assert.equal(r.status,307);assert.match(r.headers.get('location'),/login/);assert.match(await (await fetch(base+'/login')).text(),/E-mail/);
  assert.equal((await fetch(base+'/api/state')).status,401);assert.equal((await fetch(base+'/api/state',{headers:{'oai-authenticated-user-id':'spoof','oai-authenticated-user-email':'spoof@example.test'}})).status,401);
  assert.equal((await post('/api/auth/login',{email:'owner@example.test',password:'wrong'})).status,401);const owner=await login('owner@example.test',password);
+ for(const [marker,status,message] of [['TEST_GENERATION_TIMEOUT',504,/90 segundos/],['TEST_GENERATION_QUOTA',502,/cota/]]){const f=new FormData();f.set('title','Falha simulada');f.set('text',marker);let response=await fetch(base+'/api/materials',{method:'POST',headers:{Cookie:owner,Origin:base},body:f});const item=await response.json();response=await post('/api/generate',{id:item.id},owner);assert.equal(response.status,status);assert.match((await response.json()).error,message);await post('/api/materials',{id:item.id},owner,base,'DELETE');}
+
  assert.equal((await post('/api/exams',{title:'Prova',date:'2026-12-01'},owner,'https://other.example')).status,403);
  const form=new FormData();form.set('title','Frações');form.set('subject','Matemática');form.set('text','Frações equivalentes representam a mesma quantidade. Multiplicamos numerador e denominador pelo mesmo número.');
  r=await fetch(base+'/api/materials',{method:'POST',headers:{Cookie:owner,Origin:base},body:form});assert.equal(r.status,200);const material=await r.json();
