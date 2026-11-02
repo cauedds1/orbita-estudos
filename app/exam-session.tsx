@@ -1,0 +1,10 @@
+'use client';
+import {useState} from 'react';
+type Question={prompt:string,options:string[]};
+export default function ExamSession({questions,onNavigate,onFinish}:{questions:Question[],onNavigate:(index:number)=>void,onFinish:(answers:string[])=>void}){
+ const [current,setCurrent]=useState(0),[answers,setAnswers]=useState<string[]>(()=>questions.map(()=>''));
+ const answered=answers.filter(Boolean).length;
+ function go(index:number){setCurrent(index);onNavigate(index)}
+ function submit(){const missing=questions.length-answered;if(missing&&!window.confirm(`Ainda há ${missing} questões sem resposta. Entregar assim mesmo?`))return;onFinish(answers)}
+ return <section className="exam-session"><p className="exam-instructions">Responda no seu ritmo. Você pode pular questões e alterar respostas antes de entregar. A correção aparece somente no final.</p><nav className="exam-navigation" aria-label="Questões do simulado">{questions.map((_,i)=><button key={i} type="button" aria-current={i===current?'step':undefined} aria-label={`Questão ${i+1}${answers[i]?' respondida':' pendente'}`} className={(i===current?'current ':'')+(answers[i]?'answered':'')} onClick={()=>go(i)}>{i+1}</button>)}</nav><p className="exam-count">{answered} de {questions.length} respondidas</p><h1>{questions[current].prompt}</h1><div className="options">{questions[current].options.map((option,i)=><button type="button" key={option} aria-pressed={answers[current]===option} className={answers[current]===option?'selected':''} onClick={()=>setAnswers(previous=>previous.map((a,j)=>j===current?option:a))}><span>{String.fromCharCode(65+i)}</span>{option}</button>)}</div><div className="exam-actions"><button type="button" className="button secondary" disabled={current===0} onClick={()=>go(current-1)}>Anterior</button>{current<questions.length-1&&<button type="button" className="button secondary" onClick={()=>go(current+1)}>{answers[current]?'Próxima questão':'Pular por enquanto'}</button>}<button type="button" className="button primary" onClick={submit}>Entregar simulado</button></div></section>;
+}

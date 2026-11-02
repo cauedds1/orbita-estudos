@@ -332,6 +332,12 @@
 :root[data-theme="dark"] .study-stage{color:#ac97bd}
 :root[data-theme="dark"] .study-stage select{background:#282828;color:#b2a2bf}
 :root[data-theme="dark"] .study-current-file{color:#ac97bd}
+:root[data-theme="dark"] .flashcard-hint summary{color:#ac97bd}
+:root[data-theme="dark"] .exam-instructions{color:#ac97bd}
+:root[data-theme="dark"] .exam-navigation button{background:#282828;color:#b2a2bf}
+:root[data-theme="dark"] .exam-navigation button.answered{background:#213026;color:#b3ccbc}
+:root[data-theme="dark"] .exam-navigation button.current{outline:2px solid #b29adb}
+:root[data-theme="dark"] .exam-count{color:#ac97bd}
 @media(max-width:800px){
 :root[data-theme="dark"] .sidebar-overlay{background:#36294740}
 }
